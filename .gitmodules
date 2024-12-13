@@ -1,0 +1,36 @@
+[submodule "dotnet-core-8.0-bin"]
+	path = dotnet-core-8.0-bin
+	url = https://aur.archlinux.org/dotnet-core-8.0-bin.git
+[submodule "dotnet-core-bin"]
+	path = dotnet-core-bin
+	url = https://aur.archlinux.org/dotnet-core-bin.git
+[submodule "git-credential-manager-bin"]
+	path = git-credential-manager-bin
+	url = https://aur.archlinux.org/git-credential-manager-bin.git
+[submodule "google-chrome"]
+	path = google-chrome
+	url = https://aur.archlinux.org/google-chrome.git
+[submodule "gtkhash-thunar"]
+	path = gtkhash-thunar
+	url = https://aur.archlinux.org/gtkhash-thunar.git
+[submodule "jetbrains-toolbox"]
+	path = jetbrains-toolbox
+	url = https://aur.archlinux.org/jetbrains-toolbox.git
+[submodule "polychromatic"]
+	path = polychromatic
+	url = https://aur.archlinux.org/polychromatic.git
+[submodule "ttf-d2coding"]
+	path = ttf-d2coding
+	url = https://aur.archlinux.org/ttf-d2coding.git
+[submodule "ttf-nanum"]
+	path = ttf-nanum
+	url = https://aur.archlinux.org/ttf-nanum.git
+[submodule "unityhub"]
+	path = unityhub
+	url = https://aur.archlinux.org/unityhub.git
+[submodule "visual-studio-code-bin"]
+	path = visual-studio-code-bin
+	url = https://aur.archlinux.org/visual-studio-code-bin.git
+[submodule "yay"]
+	path = yay
+	url = https://aur.archlinux.org/yay.git

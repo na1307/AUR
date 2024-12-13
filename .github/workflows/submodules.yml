@@ -1,0 +1,50 @@
+name: 'Update submodules'
+
+on:
+  # Every day at 00:00/12:00
+  schedule:
+    - cron: 0 0/12 * * *
+
+  # Allows you to run this workflow manually from the Actions tab or through HTTP API
+  workflow_dispatch:
+
+jobs:
+  submodules:
+    name: 'Update submodules'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    # Update references
+    - name: Update submodules
+      run: |
+        git submodule update --remote --recursive
+
+    - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        set +e
+        git commit -am "Update submodules [skip ci]"
+        cmcode=$?
+        set -e
+        if [ $cmcode -eq 0 ]; then
+          git push
+        elif [ $cmcode -eq 1 ]; then
+          echo "No changes to commit"
+          exit 0
+        else
+          exit $cmcode
+        fi;
