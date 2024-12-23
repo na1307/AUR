@@ -37,3 +37,6 @@
 [submodule "kime-bin"]
 	path = kime-bin
 	url = https://aur.archlinux.org/kime-bin.git
+[submodule "fnm-bin"]
+	path = fnm-bin
+	url = https://aur.archlinux.org/fnm-bin.git
