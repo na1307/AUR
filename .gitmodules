@@ -34,3 +34,6 @@
 [submodule "yay"]
 	path = yay
 	url = https://aur.archlinux.org/yay.git
+[submodule "kime-bin"]
+	path = kime-bin
+	url = https://aur.archlinux.org/kime-bin.git
