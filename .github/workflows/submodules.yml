@@ -8,6 +8,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab or through HTTP API
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   submodules:
     name: 'Update submodules'
