@@ -7,9 +7,6 @@
 [submodule "git-credential-manager-bin"]
 	path = git-credential-manager-bin
 	url = https://aur.archlinux.org/git-credential-manager-bin.git
-[submodule "google-chrome"]
-	path = google-chrome
-	url = https://aur.archlinux.org/google-chrome.git
 [submodule "gtkhash-thunar"]
 	path = gtkhash-thunar
 	url = https://aur.archlinux.org/gtkhash-thunar.git
@@ -40,3 +37,6 @@
 [submodule "fnm-bin"]
 	path = fnm-bin
 	url = https://aur.archlinux.org/fnm-bin.git
+[submodule "microsoft-edge-stable-bin"]
+	path = microsoft-edge-stable-bin
+	url = https://aur.archlinux.org/microsoft-edge-stable-bin.git
