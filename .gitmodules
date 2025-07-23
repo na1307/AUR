@@ -1,0 +1,24 @@
+[submodule "dotnet-core-bin"]
+	path = dotnet-core-bin
+	url = https://aur.archlinux.org/dotnet-core-bin.git
+[submodule "git-credential-manager-bin"]
+	path = git-credential-manager-bin
+	url = https://aur.archlinux.org/git-credential-manager-bin.git
+[submodule "microsoft-edge-stable-bin"]
+	path = microsoft-edge-stable-bin
+	url = https://aur.archlinux.org/microsoft-edge-stable-bin.git
+[submodule "paru-bin"]
+	path = paru-bin
+	url = https://aur.archlinux.org/paru-bin.git
+[submodule "polychromatic"]
+	path = polychromatic
+	url = https://aur.archlinux.org/polychromatic.git
+[submodule "ttf-d2coding"]
+	path = ttf-d2coding
+	url = https://aur.archlinux.org/ttf-d2coding.git
+[submodule "ttf-nanum"]
+	path = ttf-nanum
+	url = https://aur.archlinux.org/ttf-nanum.git
+[submodule "visual-studio-code-bin"]
+	path = visual-studio-code-bin
+	url = https://aur.archlinux.org/visual-studio-code-bin.git
