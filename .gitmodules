@@ -22,3 +22,6 @@
 [submodule "visual-studio-code-bin"]
 	path = visual-studio-code-bin
 	url = https://aur.archlinux.org/visual-studio-code-bin.git
+[submodule "jetbrains-toolbox"]
+	path = jetbrains-toolbox
+	url = https://aur.archlinux.org/jetbrains-toolbox.git
