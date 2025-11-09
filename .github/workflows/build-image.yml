@@ -1,0 +1,35 @@
+name: Build Image
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: image-group
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Log in to the Container registry
+        run: echo "$GH_TOKEN" | docker login ghcr.io -u na1307 --password-stdin
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        run: 'docker build --tag aurbuild:latest --progress=plain .'
+
+      - name: Tag
+        run: 'docker tag aurbuild:latest ghcr.io/na1307/aurbuild:latest'
+
+      - name: Publish
+        run: 'docker push ghcr.io/na1307/aurbuild:latest'

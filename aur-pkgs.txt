@@ -1,0 +1,3 @@
+dotnet-core-bin
+git-credential-manager-bin
+paru-bin

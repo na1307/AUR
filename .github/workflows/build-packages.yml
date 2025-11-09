@@ -1,0 +1,52 @@
+name: Build Packages
+
+on:
+  schedule:
+    - cron: '0 15 * * *'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+  id-token: write
+
+concurrency:
+  group: packages-group
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Google Cloud Authentication
+        uses: 'google-github-actions/auth@v3'
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v3
+
+      - run: mkdir pkgs
+
+      - run: sudo chmod -R 777 ./pkgs
+
+      - name: Download
+        run: gcloud storage rsync gs://bluehillaur ./pkgs --recursive
+
+      - name: Log in to the Container registry
+        run: echo "$GH_TOKEN" | docker login ghcr.io -u na1307 --password-stdin
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Docker container
+        run: 'docker run --rm --volume $(pwd):/mnt/repo -e GPG_PRIVATE_KEY="$GPG_PRIVATE_KEY" -e GPG_PASSPHRASE="$GPG_PASSPHRASE" ghcr.io/na1307/aurbuild:latest'
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Upload
+        run: gcloud storage rsync ./pkgs gs://bluehillaur --recursive --delete-unmatched-destination-objects --no-ignore-symlinks
