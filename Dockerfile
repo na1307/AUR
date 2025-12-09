@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 COPY . ./
 
@@ -13,7 +13,7 @@ LABEL org.opencontainers.image.licenses=MIT
 
 RUN pacman-key --init
 
-RUN pacman -Syu --noconfirm dotnet-runtime-9.0 expect git
+RUN pacman -Syu --noconfirm dotnet-runtime-10.0 expect git
 
 RUN useradd -ms /bin/bash builduser
 
