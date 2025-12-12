@@ -1,6 +1,5 @@
 dotnet-core-bin
 fnm-bin
-git-credential-manager-bin
 jetbrains-toolbox
 microsoft-edge-stable-bin
 paru-bin
