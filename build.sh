@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo pacman -Sy
+sudo pacman -Syu --noconfirm
 echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --import <(echo "$GPG_PRIVATE_KEY" | base64 -d)
 expect -c 'spawn gpg --edit-key AB69CFD0BE72421F trust quit; send "5\ry\r"; expect eof'
 touch ./test
