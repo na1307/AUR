@@ -1,3 +1,4 @@
+dotup-bin
 fnm-bin
 galaxybudsclient-bin
 jetbrains-toolbox
