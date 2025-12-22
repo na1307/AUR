@@ -1,8 +1,8 @@
-dotnet-core-bin
 fnm-bin
+galaxybudsclient-bin
 jetbrains-toolbox
 microsoft-edge-stable-bin
-paru-bin
+nanum-fonts
+polychromatic
 ttf-d2coding
-ttf-nanum
 visual-studio-code-bin
