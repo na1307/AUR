@@ -6,15 +6,10 @@ namespace AurBuild;
 internal static class Program {
     private const string RepoPath = "/mnt/repo/pkgs/";
     private const string AurPkgs = "/mnt/repo/aur-pkgs.txt";
-
     private static readonly Regex PkgBaseRegex = new("^pkgbase = (?<pkgbase>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
-
     private static readonly Regex PkgVerRegex = new(@"^\s+pkgver = (?<pkgver>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
-
     private static readonly Regex PkgRelRegex = new(@"^\s+pkgrel = (?<pkgrel>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
-
     private static readonly Regex PkgNameRegex = new("^pkgname = (?<pkgname>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
-
     private static readonly Regex PkgFilenameRegex = new(@"^.+-(?<pkgver>.+)?-(?<pkgrel>\d+)?-(x86_64|any).pkg.tar.zst$", RegexOptions.Compiled);
 
     private static async Task<int> Main() {
@@ -118,8 +113,8 @@ internal static class Program {
 
         if (pkgbase > existingPb) {
             foreach (var pkg in pkgbase.Packages) {
-                File.Delete(Path.Combine(RepoPath, Directory.GetFiles(RepoPath, $"{pkg}-*.pkg.tar.zst")[0]));
-                File.Delete(Path.Combine(RepoPath, Directory.GetFiles(RepoPath, $"{pkg}-*.pkg.tar.zst.sig")[0]));
+                File.Delete(Path.Combine(RepoPath, Directory.GetFiles(RepoPath, $"{pkg}-{pkgVer}-{pkgRel}-*.pkg.tar.zst")[0]));
+                File.Delete(Path.Combine(RepoPath, Directory.GetFiles(RepoPath, $"{pkg}-{pkgVer}-{pkgRel}-*.pkg.tar.zst.sig")[0]));
             }
 
             return true;
