@@ -99,10 +99,6 @@
         "install": true
     },
     {
-        "name": "lib32-libgcrypt15",
-        "install": true
-    },
-    {
         "name": "lib32-libidn11",
         "install": true
     },
