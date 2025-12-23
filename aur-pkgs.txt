@@ -1,9 +1,0 @@
-dotup-bin
-fnm-bin
-galaxybudsclient-bin
-jetbrains-toolbox
-microsoft-edge-stable-bin
-nanum-fonts
-polychromatic
-ttf-d2coding
-visual-studio-code-bin

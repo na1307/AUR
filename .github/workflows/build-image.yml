@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - aur-pkgs.txt
+      - aur-pkgs.json
 
 permissions:
   contents: read

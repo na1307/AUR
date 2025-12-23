@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace AurBuild;
 
 internal static class Program {
     private const string RepoPath = "/mnt/repo/pkgs/";
-    private const string AurPkgs = "/mnt/repo/aur-pkgs.txt";
+    private const string AurPkgs = "/mnt/repo/aur-pkgs.json";
     private static readonly Regex PkgBaseRegex = new("^pkgbase = (?<pkgbase>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
     private static readonly Regex PkgVerRegex = new(@"^\s+pkgver = (?<pkgver>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
     private static readonly Regex PkgRelRegex = new(@"^\s+pkgrel = (?<pkgrel>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
@@ -18,12 +19,14 @@ internal static class Program {
 
             Directory.CreateDirectory(aurBuildDir);
 
-            foreach (var line in await File.ReadAllLinesAsync(AurPkgs)) {
+            var pkgs = JsonSerializer.Deserialize(await File.ReadAllBytesAsync(AurPkgs), AurBuildJsonSerializationContext.Default.AurPkgArray)!;
+
+            foreach (var pkg in pkgs) {
                 ProcessStartInfo gitPsi = new() {
                     FileName = "git",
                     ArgumentList = {
                         "clone",
-                        $"https://aur.archlinux.org/{line}.git",
+                        $"https://aur.archlinux.org/{pkg.Name}.git",
                         "--depth=1"
                     },
                     UseShellExecute = false,
@@ -38,13 +41,13 @@ internal static class Program {
                     throw new("git clone failed.");
                 }
 
-                var packageDir = Path.Combine(aurBuildDir, line);
+                var packageDir = Path.Combine(aurBuildDir, pkg.Name);
                 var pkgbase = await ParseSrcinfo(packageDir);
                 var needed = CompareVersionAndPrepare(pkgbase);
 
                 if (needed) {
                     Console.WriteLine($"Building {pkgbase.Name}");
-                    await BuildPackage(packageDir, pkgbase);
+                    await BuildPackage(packageDir, pkgbase, pkg.Install);
                 } else {
                     Console.WriteLine($"Skipping {pkgbase.Name}");
                 }
@@ -123,7 +126,7 @@ internal static class Program {
         return false;
     }
 
-    private static async Task BuildPackage(string packageDir, PackageBase pkgbase) {
+    private static async Task BuildPackage(string packageDir, PackageBase pkgbase, bool needInstall) {
         ProcessStartInfo psi1 = new() {
             FileName = "makepkg",
             ArgumentList = {
@@ -133,6 +136,10 @@ internal static class Program {
             UseShellExecute = false,
             WorkingDirectory = packageDir
         };
+
+        if (needInstall) {
+            psi1.ArgumentList.Add("-i");
+        }
 
         var p1 = Process.Start(psi1)!;
 
