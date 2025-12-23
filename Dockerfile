@@ -13,6 +13,10 @@ LABEL org.opencontainers.image.licenses=MIT
 
 RUN pacman-key --init
 
+RUN pacman-key -r AB69CFD0BE72421F --keyserver keys.openpgp.org
+
+RUN pacman-key --lsign-key AB69CFD0BE72421F
+
 RUN pacman -Syu --noconfirm dotnet-runtime-10.0 expect git
 
 RUN useradd -ms /bin/bash builduser
