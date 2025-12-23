@@ -131,7 +131,8 @@ internal static class Program {
             FileName = "makepkg",
             ArgumentList = {
                 "-s",
-                "--noconfirm"
+                "--noconfirm",
+                "--skippgpcheck"
             },
             UseShellExecute = false,
             WorkingDirectory = packageDir
