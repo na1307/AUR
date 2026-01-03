@@ -11,6 +11,10 @@ LABEL org.opencontainers.image.source=https://github.com/na1307/AUR
 LABEL org.opencontainers.image.description="AUR Build"
 LABEL org.opencontainers.image.licenses=MIT
 
+RUN echo "[bluehill]" >> /etc/pacman.conf
+
+RUN echo "Server = https://storage.googleapis.com/bluehillaur/" >> /etc/pacman.conf
+
 RUN pacman-key --init
 
 RUN pacman-key -r AB69CFD0BE72421F --keyserver keys.openpgp.org
