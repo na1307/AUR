@@ -21,120 +21,12 @@
         "name": "nanum-fonts"
     },
     {
+        "name": "rpc-bridge-bin"
+    },
+    {
         "name": "ttf-d2coding"
     },
     {
         "name": "visual-studio-code-bin"
-    },
-    {
-        "name": "glew1.10",
-        "install": true
-    },
-    {
-        "name": "gtk2",
-        "install": true
-    },
-    {
-        "name": "libdbusmenu-gtk2",
-        "install": true
-    },
-    {
-        "name": "libgcrypt15",
-        "install": true
-    },
-    {
-        "name": "libidn11",
-        "install": true
-    },
-    {
-        "name": "libindicator-gtk2",
-        "install": true
-    },
-    {
-        "name": "libjpeg6-turbo",
-        "install": true
-    },
-    {
-        "name": "libpng12",
-        "install": true
-    },
-    {
-        "name": "librtmp0",
-        "install": true
-    },
-    {
-        "name": "libtiff4",
-        "install": true
-    },
-    {
-        "name": "libudev0-shim",
-        "install": true
-    },
-    {
-        "name": "libvpx1.3",
-        "install": true
-    },
-    {
-        "name": "openssl-1.0",
-        "install": true
-    },
-    {
-        "name": "lib32-glew1.10",
-        "install": true
-    },
-    {
-        "name": "lib32-gtk2",
-        "install": true
-    },
-    {
-        "name": "lib32-libdbusmenu-gtk2",
-        "install": true
-    },
-    {
-        "name": "lib32-libappindicator-gtk2",
-        "install": true
-    },
-    {
-        "name": "lib32-libgcrypt15",
-        "install": true
-    },
-    {
-        "name": "lib32-libidn11",
-        "install": true
-    },
-    {
-        "name": "lib32-libindicator-gtk2",
-        "install": true
-    },
-    {
-        "name": "lib32-libjpeg6-turbo",
-        "install": true
-    },
-    {
-        "name": "lib32-libpng12",
-        "install": true
-    },
-    {
-        "name": "lib32-librtmp0",
-        "install": true
-    },
-    {
-        "name": "lib32-libtiff4",
-        "install": true
-    },
-    {
-        "name": "lib32-libudev0-shim",
-        "install": true
-    },
-    {
-        "name": "lib32-libvpx1.3",
-        "install": true
-    },
-    {
-        "name": "lib32-openssl-1.0",
-        "install": true
-    },
-    {
-        "name": "steam-native-runtime"
     }
 ]
