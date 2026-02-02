@@ -9,6 +9,9 @@
         "name": "galaxybudsclient-bin"
     },
     {
+        "name": "geode-cli-bin"
+    },
+    {
         "name": "jetbrains-toolbox"
     },
     {
@@ -28,5 +31,8 @@
     },
     {
         "name": "visual-studio-code-bin"
+    },
+    {
+        "name": "xwin-bin"
     }
 ]
