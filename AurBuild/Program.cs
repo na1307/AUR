@@ -137,7 +137,7 @@ internal static class Program {
                 ArgumentList = {
                     "-p1",
                     "-i",
-                    pkgbuildPatch
+                    Path.Combine(patchesDir, pkgbuildPatch)
                 },
                 UseShellExecute = false,
                 WorkingDirectory = packageDir
