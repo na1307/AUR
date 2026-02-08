@@ -21,7 +21,7 @@ RUN pacman-key -r AB69CFD0BE72421F --keyserver keys.openpgp.org
 
 RUN pacman-key --lsign-key AB69CFD0BE72421F
 
-RUN pacman -Syu --noconfirm dotnet-runtime-10.0 expect git
+RUN pacman -Syu --noconfirm dotnet-runtime-10.0 expect git clang lld llvm
 
 RUN useradd -ms /bin/bash builduser
 
@@ -35,15 +35,27 @@ RUN mkdir -p ./.config/pacman
 
 RUN echo "BUILDENV=(!distcc color !ccache check sign)" >> ./.config/pacman/makepkg.conf
 
-RUN echo "OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug lto)" >> ./.config/pacman/makepkg.conf
-
 RUN echo "PACKAGER=\"Jonghyo Lee <na1307@outlook.kr>\"" >> ./.config/pacman/makepkg.conf
 
 RUN echo "GPGKEY=\"AB69CFD0BE72421F\"" >> ./.config/pacman/makepkg.conf
 
+RUN echo "export CC=clang" >> ./.config/pacman/makepkg.conf
+
+RUN echo "export CXX=clang++" >> ./.config/pacman/makepkg.conf
+
+RUN echo "export QMAKESPEC=linux-clang" >> ./.config/pacman/makepkg.conf
+
+RUN echo "CFLAGS=\"$CFLAGS -march=x86-64-v3 -fuse-ld=lld\"" >> ./.config/pacman/makepkg.conf
+
+RUN echo "CXXFLAGS=\"$CXXFLAGS -march=x86-64-v3 -fuse-ld=lld\"" >> ./.config/pacman/makepkg.conf
+
 COPY --from=build /_out .
 
 COPY --from=build /build.sh .
+
+RUN mkdir ./patches
+
+COPY --from=build /patches ./patches
 
 RUN mkdir buildoutput
 

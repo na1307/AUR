@@ -127,6 +127,33 @@ internal static class Program {
     }
 
     private static async Task BuildPackage(string packageDir, PackageBase pkgbase, bool needInstall) {
+        var patchesDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "patches");
+        var pkgbuildPatch = $"{pkgbase.Name}_pkgbuild.patch";
+        var sourcePatch = $"{pkgbase.Name}_source.patch";
+
+        if (File.Exists(Path.Combine(patchesDir, pkgbuildPatch)) && File.Exists(Path.Combine(patchesDir, sourcePatch))) {
+            ProcessStartInfo patchPsi = new() {
+                FileName = "patch",
+                ArgumentList = {
+                    "-p1",
+                    "-i",
+                    pkgbuildPatch
+                },
+                UseShellExecute = false,
+                WorkingDirectory = packageDir
+            };
+
+            var pPatch = Process.Start(patchPsi)!;
+
+            await pPatch.WaitForExitAsync();
+
+            if (pPatch.ExitCode != 0) {
+                throw new("Failed to patch package.");
+            }
+
+            File.Copy(Path.Combine(patchesDir, sourcePatch), $"{packageDir}/{sourcePatch}");
+        }
+
         ProcessStartInfo psi1 = new() {
             FileName = "makepkg",
             ArgumentList = {
