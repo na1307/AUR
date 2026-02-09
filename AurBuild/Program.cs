@@ -96,7 +96,7 @@ internal static class Program {
         var firstName = pkgbase.Packages.First();
 
         var files = Directory.GetFiles(RepoPath, $"{firstName}-*.pkg.tar.zst")
-            .Where(f => f.Split('-')[firstName.Split('-').Length + 1] == pkgbase.Version).ToArray();
+            .Where(f => f.Split('-')[firstName.Split('-').Length] == pkgbase.Version).ToArray();
 
         switch (files.Length) {
             case 0:
