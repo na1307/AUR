@@ -94,7 +94,9 @@ internal static class Program {
 
     private static bool CompareVersionAndPrepare(PackageBase pkgbase) {
         var firstName = pkgbase.Packages.First();
-        var files = Directory.GetFiles(RepoPath, $"{firstName}-*.pkg.tar.zst");
+
+        var files = Directory.GetFiles(RepoPath, $"{firstName}-*.pkg.tar.zst")
+            .Where(f => f.Split('-')[firstName.Split('-').Length - 2] == pkgbase.Version).ToArray();
 
         switch (files.Length) {
             case 0:
