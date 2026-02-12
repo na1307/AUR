@@ -45,9 +45,9 @@ RUN echo "export CXX=clang++" >> ./.config/pacman/makepkg.conf
 
 RUN echo "export QMAKESPEC=linux-clang" >> ./.config/pacman/makepkg.conf
 
-RUN echo "CFLAGS=\"$CFLAGS -march=x86-64-v3 -fuse-ld=lld\"" >> ./.config/pacman/makepkg.conf
+RUN echo "CFLAGS=\"$CFLAGS -march=x86-64-v3\"" >> ./.config/pacman/makepkg.conf
 
-RUN echo "CXXFLAGS=\"$CXXFLAGS -march=x86-64-v3 -fuse-ld=lld\"" >> ./.config/pacman/makepkg.conf
+RUN echo "CXXFLAGS=\"$CXXFLAGS -march=x86-64-v3\"" >> ./.config/pacman/makepkg.conf
 
 RUN echo "LDFLAGS=\"$LDFLAGS -fuse-ld=lld\"" >> ./.config/pacman/makepkg.conf
 
