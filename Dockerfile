@@ -49,6 +49,8 @@ RUN echo "CFLAGS=\"$CFLAGS -march=x86-64-v3 -fuse-ld=lld\"" >> ./.config/pacman/
 
 RUN echo "CXXFLAGS=\"$CXXFLAGS -march=x86-64-v3 -fuse-ld=lld\"" >> ./.config/pacman/makepkg.conf
 
+RUN echo "LDFLAGS=\"$LDFLAGS -fuse-ld=lld\"" >> ./.config/pacman/makepkg.conf
+
 COPY --from=build /_out .
 
 COPY --from=build /build.sh .
