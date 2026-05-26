@@ -42,7 +42,6 @@ internal static class Program {
                 }
 
                 var packageDir = Path.Combine(aurBuildDir, pkg.Name);
-                var pkgbase = await ParseSrcinfo(packageDir);
 
                 if (pkg.VcsPkg) {
                     ProcessStartInfo psiu = new() {
@@ -61,10 +60,9 @@ internal static class Program {
                     if (pu.ExitCode != 0) {
                         throw new("Failed to update version.");
                     }
-
-                    pkgbase = await ParseSrcinfo(packageDir);
                 }
 
+                var pkgbase = await ParseSrcinfo(packageDir);
                 var needed = CompareVersionAndPrepare(pkgbase);
 
                 if (needed) {
