@@ -35,6 +35,8 @@ RUN mkdir -p ./.config/pacman
 
 RUN echo "BUILDENV=(!distcc color !ccache check sign)" >> ./.config/pacman/makepkg.conf
 
+RUN echo "OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug lto)" >> ./.config/pacman/makepkg.conf
+
 RUN echo "PACKAGER=\"Jonghyo Lee <na1307@outlook.kr>\"" >> ./.config/pacman/makepkg.conf
 
 RUN echo "GPGKEY=\"AB69CFD0BE72421F\"" >> ./.config/pacman/makepkg.conf

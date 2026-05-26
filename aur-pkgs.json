@@ -6,7 +6,8 @@
         "name": "jetbrains-toolbox"
     },
     {
-        "name": "labwc-tweaks-git"
+        "name": "labwc-tweaks-git",
+        "vcspkg": true
     },
     {
         "name": "nanum-fonts"

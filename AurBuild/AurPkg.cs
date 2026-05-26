@@ -6,6 +6,9 @@ internal sealed class AurPkg {
     [JsonPropertyName("name")]
     public required string Name { get; init; }
 
+    [JsonPropertyName("vcspkg")]
+    public bool VcsPkg { get; init; }
+
     [JsonPropertyName("install")]
     public bool Install { get; init; }
 }

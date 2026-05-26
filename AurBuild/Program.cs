@@ -43,6 +43,28 @@ internal static class Program {
 
                 var packageDir = Path.Combine(aurBuildDir, pkg.Name);
                 var pkgbase = await ParseSrcinfo(packageDir);
+
+                if (pkg.VcsPkg) {
+                    ProcessStartInfo psiu = new() {
+                        FileName = "makepkg",
+                        ArgumentList = {
+                            "-cdo"
+                        },
+                        UseShellExecute = false,
+                        WorkingDirectory = packageDir
+                    };
+
+                    var pu = Process.Start(psiu)!;
+
+                    await pu.WaitForExitAsync();
+
+                    if (pu.ExitCode != 0) {
+                        throw new("Failed to update version.");
+                    }
+
+                    pkgbase = await ParseSrcinfo(packageDir);
+                }
+
                 var needed = CompareVersionAndPrepare(pkgbase);
 
                 if (needed) {
@@ -207,9 +229,19 @@ internal static class Program {
         DirectoryInfo destination = new(RepoPath);
 
         var files = sourceDir.GetFiles($"{packageName}-{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst");
+
+        if (files.Length == 0) {
+            throw new($"No files: {packageName}-{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst");
+        }
+
         var destinationFile = files[0].CopyTo(Path.Combine(destination.FullName, files[0].Name));
 
         var files2 = sourceDir.GetFiles($"{packageName}-{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst.sig");
+
+        if (files2.Length == 0) {
+            throw new($"No files: {packageName}-{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst.sig");
+        }
+
         files2[0].CopyTo(Path.Combine(destination.FullName, files2[0].Name));
 
         return destinationFile.FullName;
