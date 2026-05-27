@@ -6,7 +6,13 @@
         "name": "jetbrains-toolbox"
     },
     {
+        "name": "labwc-tweaks-git"
+    },
+    {
         "name": "nanum-fonts"
+    },
+    {
+        "name": "nm-tray"
     },
     {
         "name": "ttf-d2coding"
