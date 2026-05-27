@@ -1,45 +1,18 @@
 [
     {
-        "name": "86box"
-    },
-    {
-        "name": "86box-roms"
-    },
-    {
-        "name": "dotup-bin"
-    },
-    {
-        "name": "galaxybudsclient-bin"
-    },
-    {
-        "name": "geode-cli-bin"
+        "name": "google-chrome"
     },
     {
         "name": "jetbrains-toolbox"
     },
     {
-        "name": "lsfg-vk-bin"
-    },
-    {
-        "name": "microsoft-edge-stable-bin"
-    },
-    {
         "name": "nanum-fonts"
-    },
-    {
-        "name": "pinta"
-    },
-    {
-        "name": "rpc-bridge-bin"
     },
     {
         "name": "ttf-d2coding"
     },
     {
         "name": "visual-studio-code-bin"
-    },
-    {
-        "name": "xwin-bin"
     },
     {
         "name": "yay"
