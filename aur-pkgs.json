@@ -1,19 +1,12 @@
 [
     {
-        "name": "google-chrome"
+        "name": "brave-origin-bin"
     },
     {
         "name": "jetbrains-toolbox"
     },
     {
-        "name": "labwc-tweaks-git",
-        "vcspkg": true
-    },
-    {
         "name": "nanum-fonts"
-    },
-    {
-        "name": "nm-tray"
     },
     {
         "name": "ttf-d2coding"
