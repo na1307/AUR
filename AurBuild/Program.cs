@@ -10,8 +10,9 @@ internal static class Program {
     private static readonly Regex PkgBaseRegex = new("^pkgbase = (?<pkgbase>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
     private static readonly Regex PkgVerRegex = new(@"^\s+pkgver = (?<pkgver>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
     private static readonly Regex PkgRelRegex = new(@"^\s+pkgrel = (?<pkgrel>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
+    private static readonly Regex EpochRegex = new(@"^\s+epoch = (?<epoch>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
     private static readonly Regex PkgNameRegex = new("^pkgname = (?<pkgname>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
-    private static readonly Regex PkgFilenameRegex = new(@"^.+-(?<pkgver>.+)?-(?<pkgrel>\d+)?-(x86_64|any).pkg.tar.zst$", RegexOptions.Compiled);
+    private static readonly Regex PkgFilenameRegex = new(@"^.+-((?<epoch>.+):)?(?<pkgver>.+)?-(?<pkgrel>\d+)?-(x86_64|any).pkg.tar.zst$", RegexOptions.Compiled);
 
     private static async Task<int> Main() {
         try {
@@ -98,6 +99,7 @@ internal static class Program {
         var baseNameMatch = PkgBaseRegex.Match(srcInfo);
         var baseVerMatch = PkgVerRegex.Match(srcInfo);
         var baseRelMatch = PkgRelRegex.Match(srcInfo);
+        var baseEpochMatch = EpochRegex.Match(srcInfo);
         var pkgNameMatches = PkgNameRegex.Matches(srcInfo);
 
         if (!baseNameMatch.Success || !baseVerMatch.Success || !baseRelMatch.Success || pkgNameMatches.Count == 0) {
@@ -107,9 +109,10 @@ internal static class Program {
         var baseName = baseNameMatch.Groups["pkgbase"].Value;
         var baseVer = baseVerMatch.Groups["pkgver"].Value;
         var baseRel = int.Parse(baseRelMatch.Groups["pkgrel"].Value);
+        var baseEpoch = baseEpochMatch.Success ? int.Parse(baseEpochMatch.Groups["epoch"].Value) : (int?)null;
         var pkgs = pkgNameMatches.Select(static m => m.Groups["pkgname"].Value);
 
-        return new(baseName, baseVer, baseRel, pkgs);
+        return new(baseName, baseVer, baseRel, baseEpoch, pkgs);
     }
 
     private static bool CompareVersionAndPrepare(PackageBase pkgbase) {
@@ -134,12 +137,15 @@ internal static class Program {
 
         var pkgVer = fm.Groups["pkgver"].Value;
         var pkgRel = int.Parse(fm.Groups["pkgrel"].Value);
-        PackageBase existingPb = new(firstName, pkgVer, pkgRel, []);
+        var epoch = fm.Groups["epoch"].Success ? int.Parse(fm.Groups["epoch"].Value) : (int?)null;
+        PackageBase existingPb = new(firstName, pkgVer, pkgRel, epoch, []);
 
         if (pkgbase > existingPb) {
             foreach (var pkg in pkgbase.Packages) {
-                File.Delete(Path.Combine(RepoPath, Directory.GetFiles(RepoPath, $"{pkg}-{pkgVer}-{pkgRel}-*.pkg.tar.zst")[0]));
-                File.Delete(Path.Combine(RepoPath, Directory.GetFiles(RepoPath, $"{pkg}-{pkgVer}-{pkgRel}-*.pkg.tar.zst.sig")[0]));
+                File.Delete(Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-any.pkg.tar.zst"));
+                File.Delete(Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-x86_64.pkg.tar.zst"));
+                File.Delete(Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-any.pkg.tar.zst.sig"));
+                File.Delete(Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-x86_64.pkg.tar.zst.sig"));
             }
 
             return true;
@@ -226,18 +232,18 @@ internal static class Program {
         DirectoryInfo sourceDir = new(source);
         DirectoryInfo destination = new(RepoPath);
 
-        var files = sourceDir.GetFiles($"{packageName}-{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst");
+        var files = sourceDir.GetFiles($"{packageName}-{(pkgbase.Epoch is not null ? $"{pkgbase.Epoch.Value}:" : string.Empty)}{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst");
 
         if (files.Length == 0) {
-            throw new($"No files: {packageName}-{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst");
+            throw new($"No files: {packageName}-{(pkgbase.Epoch is not null ? $"{pkgbase.Epoch.Value}:" : string.Empty)}{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst");
         }
 
         var destinationFile = files[0].CopyTo(Path.Combine(destination.FullName, files[0].Name));
 
-        var files2 = sourceDir.GetFiles($"{packageName}-{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst.sig");
+        var files2 = sourceDir.GetFiles($"{packageName}-{(pkgbase.Epoch is not null ? $"{pkgbase.Epoch.Value}:" : string.Empty)}{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst.sig");
 
         if (files2.Length == 0) {
-            throw new($"No files: {packageName}-{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst.sig");
+            throw new($"No files: {packageName}-{(pkgbase.Epoch is not null ? $"{pkgbase.Epoch.Value}:" : string.Empty)}{pkgbase.Version}-{pkgbase.Release}-*.pkg.tar.zst.sig");
         }
 
         files2[0].CopyTo(Path.Combine(destination.FullName, files2[0].Name));

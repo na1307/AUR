@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace AurBuild;
 
-internal readonly record struct PackageBase(string Name, string Version, int Release, IEnumerable<string> Packages) : IComparable<PackageBase> {
+internal readonly record struct PackageBase(string Name, string Version, int Release, int? Epoch, IEnumerable<string> Packages) : IComparable<PackageBase> {
     public static bool operator <(PackageBase left, PackageBase right) => left.CompareTo(right) < 0;
 
     public static bool operator >(PackageBase left, PackageBase right) => left.CompareTo(right) > 0;
@@ -15,8 +15,8 @@ internal readonly record struct PackageBase(string Name, string Version, int Rel
         ProcessStartInfo psi = new() {
             FileName = "vercmp",
             ArgumentList = {
-                Version,
-                other.Version
+                $"{(Epoch is not null ? $"{Epoch.Value}:" : string.Empty)}{Version}-{Release}",
+                $"{(other.Epoch is not null ? $"{other.Epoch.Value}:" : string.Empty)}{other.Version}-{other.Release}"
             },
             UseShellExecute = false,
             RedirectStandardOutput = true
@@ -26,8 +26,6 @@ internal readonly record struct PackageBase(string Name, string Version, int Rel
 
         p.WaitForExit();
 
-        var result = int.Parse(p.StandardOutput.ReadToEnd());
-
-        return result != 0 ? result : Release.CompareTo(other.Release);
+        return int.Parse(p.StandardOutput.ReadToEnd());
     }
 }
