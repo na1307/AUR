@@ -74,6 +74,10 @@ internal static class Program {
                 }
             }
 
+            foreach (var file in Directory.GetFiles(RepoPath)) {
+                Console.WriteLine(file);
+            }
+
             return 0;
         } catch (Exception e) {
             Console.WriteLine(e);
@@ -142,10 +146,18 @@ internal static class Program {
 
         if (pkgbase > existingPb) {
             foreach (var pkg in pkgbase.Packages) {
-                File.Delete(Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-any.pkg.tar.zst"));
-                File.Delete(Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-x86_64.pkg.tar.zst"));
-                File.Delete(Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-any.pkg.tar.zst.sig"));
-                File.Delete(Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-x86_64.pkg.tar.zst.sig"));
+                var pany = Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-any.pkg.tar.zst");
+                Console.WriteLine(pany);
+                File.Delete(pany);
+                var px86 = Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-x86_64.pkg.tar.zst");
+                Console.WriteLine(px86);
+                File.Delete(px86);
+                var panys = Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-any.pkg.tar.zst.sig");
+                Console.WriteLine(panys);
+                File.Delete(panys);
+                var px86s = Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-x86_64.pkg.tar.zst.sig");
+                Console.WriteLine(px86s);
+                File.Delete(px86s);
             }
 
             return true;
