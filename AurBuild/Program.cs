@@ -12,7 +12,7 @@ internal static class Program {
     private static readonly Regex PkgRelRegex = new(@"^\s+pkgrel = (?<pkgrel>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
     private static readonly Regex EpochRegex = new(@"^\s+epoch = (?<epoch>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
     private static readonly Regex PkgNameRegex = new("^pkgname = (?<pkgname>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
-    private static readonly Regex PkgFilenameRegex = new(@"^.+-((?<epoch>.+):)?(?<pkgver>.+)-(?<pkgrel>\d+)-(x86_64|any).pkg.tar.zst$", RegexOptions.Compiled);
+    private static readonly Regex PkgFilenameRegex = new(@"^(?<pkgname>.+)-((?<epoch>\d+):)?(?<pkgver>.+)-(?<pkgrel>\d+)-(x86_64|any)\.pkg\.tar\.zst$", RegexOptions.Compiled);
 
     private static async Task<int> Main() {
         try {
@@ -74,10 +74,6 @@ internal static class Program {
                 }
             }
 
-            foreach (var file in Directory.GetFiles(RepoPath)) {
-                Console.WriteLine(file);
-            }
-
             return 0;
         } catch (Exception e) {
             Console.WriteLine(e);
@@ -120,54 +116,47 @@ internal static class Program {
     }
 
     private static bool CompareVersionAndPrepare(PackageBase pkgbase) {
-        Console.WriteLine(pkgbase.Packages.Count());
-        var firstName = pkgbase.Packages.First();
+        var existingFiles = Directory.GetFiles(RepoPath, "*.pkg.tar.zst");
+        var pkgFiles = pkgbase.Packages.Select(p => existingFiles.SingleOrDefault(f => ParsePackageFile(f).Name == p)).ToArray();
 
-        var files = Directory.GetFiles(RepoPath, $"{firstName}-*.pkg.tar.zst")
-            .Where(f => f.Split('-')[firstName.Split('-').Length] == $"{(pkgbase.Epoch is not null ? $"{pkgbase.Epoch.Value}:" : string.Empty)}{pkgbase.Version}").ToArray();
-
-        switch (files.Length) {
-            case 0:
-                return true;
-
-            case > 1:
-                throw new("Too many files.");
-        }
-
-        var fm = PkgFilenameRegex.Match(Path.GetFileName(files[0]));
-
-        if (!fm.Success) {
-            throw new("Failed.");
-        }
-
-        var pkgVer = fm.Groups["pkgver"].Value;
-        var pkgRel = int.Parse(fm.Groups["pkgrel"].Value);
-        var epoch = fm.Groups["epoch"].Success ? int.Parse(fm.Groups["epoch"].Value) : (int?)null;
-        PackageBase existingPb = new(firstName, pkgVer, pkgRel, epoch, []);
-
-        if (pkgbase > existingPb) {
-            foreach (var pkg in pkgbase.Packages) {
-                Console.WriteLine(pkg);
-                var pany = Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-any.pkg.tar.zst");
-                Console.WriteLine(pany);
-                File.Delete(pany);
-                var px86 = Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-x86_64.pkg.tar.zst");
-                Console.WriteLine(px86);
-                File.Delete(px86);
-                var panys = Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-any.pkg.tar.zst.sig");
-                Console.WriteLine(panys);
-                File.Delete(panys);
-                var px86s = Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-x86_64.pkg.tar.zst.sig");
-                Console.WriteLine(px86s);
-                File.Delete(px86s);
-            }
-
-            Console.WriteLine(true);
+        if (pkgFiles.Any(f => f is null)) {
             return true;
         }
 
-        Console.WriteLine(false);
-        return false;
+        var existingPb = ParsePackageFile(pkgFiles[0]!);
+
+        if (pkgbase <= existingPb) {
+            return false;
+        }
+
+        foreach (var file in pkgFiles) {
+            File.Delete(file!);
+
+            var sig = file + ".sig";
+
+            if (File.Exists(sig)) {
+                File.Delete(sig);
+            }
+        }
+
+        return true;
+    }
+
+    private static PackageBase ParsePackageFile(string file) {
+        var fileName = Path.GetFileName(file);
+        var match = PkgFilenameRegex.Match(fileName);
+
+        if (!match.Success) {
+            throw new($"Invalid package filename: {fileName}");
+        }
+
+        return new PackageBase(
+            match.Groups["pkgname"].Value,
+            match.Groups["pkgver"].Value,
+            int.Parse(match.Groups["pkgrel"].Value),
+            match.Groups["epoch"].Success ? int.Parse(match.Groups["epoch"].Value) : null,
+            []
+        );
     }
 
     private static async Task BuildPackage(string packageDir, PackageBase pkgbase, bool needInstall) {
