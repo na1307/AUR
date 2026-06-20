@@ -120,6 +120,7 @@ internal static class Program {
     }
 
     private static bool CompareVersionAndPrepare(PackageBase pkgbase) {
+        Console.WriteLine(pkgbase.Packages.Count());
         var firstName = pkgbase.Packages.First();
 
         var files = Directory.GetFiles(RepoPath, $"{firstName}-*.pkg.tar.zst")
@@ -145,8 +146,6 @@ internal static class Program {
         PackageBase existingPb = new(firstName, pkgVer, pkgRel, epoch, []);
 
         if (pkgbase > existingPb) {
-            Console.WriteLine(pkgbase.Packages.Count());
-
             foreach (var pkg in pkgbase.Packages) {
                 Console.WriteLine(pkg);
                 var pany = Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-any.pkg.tar.zst");
@@ -163,9 +162,11 @@ internal static class Program {
                 File.Delete(px86s);
             }
 
+            Console.WriteLine(true);
             return true;
         }
 
+        Console.WriteLine(false);
         return false;
     }
 

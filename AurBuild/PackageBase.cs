@@ -22,6 +22,7 @@ internal readonly record struct PackageBase(string Name, string Version, int Rel
             RedirectStandardOutput = true
         };
 
+        Console.WriteLine($"{(Epoch is not null ? $"{Epoch.Value}:" : string.Empty)}{Version}-{Release} vs {(other.Epoch is not null ? $"{other.Epoch.Value}:" : string.Empty)}{other.Version}-{other.Release}");
         var p = Process.Start(psi)!;
 
         p.WaitForExit();
