@@ -12,7 +12,7 @@ internal static class Program {
     private static readonly Regex PkgRelRegex = new(@"^\s+pkgrel = (?<pkgrel>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
     private static readonly Regex EpochRegex = new(@"^\s+epoch = (?<epoch>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
     private static readonly Regex PkgNameRegex = new("^pkgname = (?<pkgname>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
-    private static readonly Regex PkgFilenameRegex = new(@"^.+-((?<epoch>.+):)?(?<pkgver>.+)?-(?<pkgrel>\d+)?-(x86_64|any).pkg.tar.zst$", RegexOptions.Compiled);
+    private static readonly Regex PkgFilenameRegex = new(@"^.+-((?<epoch>.+):)?(?<pkgver>.+)-(?<pkgrel>\d+)-(x86_64|any).pkg.tar.zst$", RegexOptions.Compiled);
 
     private static async Task<int> Main() {
         try {
@@ -145,7 +145,10 @@ internal static class Program {
         PackageBase existingPb = new(firstName, pkgVer, pkgRel, epoch, []);
 
         if (pkgbase > existingPb) {
+            Console.WriteLine(pkgbase.Packages.Count());
+
             foreach (var pkg in pkgbase.Packages) {
+                Console.WriteLine(pkg);
                 var pany = Path.Combine(RepoPath, $"{pkg}-{(epoch is not null ? $"{epoch.Value}:" : string.Empty)}{pkgVer}-{pkgRel}-any.pkg.tar.zst");
                 Console.WriteLine(pany);
                 File.Delete(pany);
