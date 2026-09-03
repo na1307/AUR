@@ -1,8 +1,5 @@
 [
     {
-        "name": "brave-origin-bin"
-    },
-    {
         "name": "chatgpt-desktop"
     },
     {
@@ -22,8 +19,5 @@
     },
     {
         "name": "xwin-bin"
-    },
-    {
-        "name": "yay"
     }
 ]
